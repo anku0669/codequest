@@ -1,5 +1,5 @@
 /* ============================================================
-   CodeQuest SPA v4 — IDE editor + 2000+ challenges + DSA + learning material
+   Ironyx Code SPA v5 — IDE editor + 4800+ challenges + DSA + learning material
    ============================================================ */
 const C = window.CURRICULUM;
 const app = document.getElementById("app");
@@ -10,19 +10,51 @@ function loadAuth() { try { return Object.assign({ users: {}, current: null }, J
 let auth = loadAuth();
 function saveAuth() { localStorage.setItem(AUTH_KEY, JSON.stringify(auth)); }
 function userKey() { return "codequest_player_v1::" + (auth.current || "guest"); }
-function registerUser(name, pass) {
+/* Passwords are never stored in reversible form. We keep only a salted
+   SHA-256 hash (Web Crypto). Legacy base64 entries are upgraded on next login.
+   NOTE: this is a local-only profile system (no server) — the hash simply
+   avoids storing the raw password in localStorage. */
+async function sha256Hex(text) {
+  if (window.crypto && crypto.subtle) {
+    const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+    return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("");
+  }
+  // Fallback for insecure contexts (no SubtleCrypto): weak, but never stores the raw password.
+  let h = 5381 >>> 0; for (let i = 0; i < text.length; i++) h = (((h << 5) + h) + text.charCodeAt(i)) >>> 0;
+  return "w" + h.toString(16);
+}
+function randSalt() {
+  const a = new Uint8Array(16);
+  if (window.crypto && crypto.getRandomValues) crypto.getRandomValues(a);
+  else for (let i = 0; i < a.length; i++) a[i] = Math.floor(Math.random() * 256);
+  return [...a].map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+async function hashPass(pass, salt) { return "sha256$" + salt + "$" + (await sha256Hex(salt + ":" + (pass || ""))); }
+
+async function registerUser(name, pass) {
   name = (name || "").trim();
   if (name.length < 2) return "Please enter a name (2+ characters).";
+  if (name.length > 40) return "That name is too long (max 40 characters).";
   if ((pass || "").length < 4) return "Password must be at least 4 characters.";
   if (auth.users[name.toLowerCase()]) return "That account already exists — try logging in.";
-  auth.users[name.toLowerCase()] = { name, p: btoa(pass), created: Date.now() };
+  auth.users[name.toLowerCase()] = { name, p: await hashPass(pass, randSalt()), created: Date.now() };
   auth.current = name.toLowerCase(); saveAuth(); state = load(); return null;
 }
-function loginUser(name, pass) {
-  const u = auth.users[(name || "").trim().toLowerCase()];
+async function loginUser(name, pass) {
+  const key = (name || "").trim().toLowerCase();
+  const u = auth.users[key];
   if (!u) return "No account with that name. Register first.";
-  if (u.p !== btoa(pass || "")) return "Incorrect password.";
-  auth.current = (name || "").trim().toLowerCase(); saveAuth(); state = load(); return null;
+  let ok = false;
+  if (typeof u.p === "string" && u.p.startsWith("sha256$")) {
+    const salt = u.p.split("$")[1] || "";
+    ok = (await hashPass(pass, salt)) === u.p;
+  } else {
+    // Legacy base64 entry → verify, then transparently upgrade to a salted hash.
+    try { ok = u.p === btoa(pass || ""); } catch { ok = false; }
+    if (ok) { u.p = await hashPass(pass, randSalt()); }
+  }
+  if (!ok) return "Incorrect password.";
+  auth.current = key; saveAuth(); state = load(); return null;
 }
 function logoutUser() { auth.current = null; saveAuth(); state = load(); }
 function displayName() { const u = auth.current && auth.users[auth.current]; return u ? u.name : null; }
@@ -46,8 +78,51 @@ let ide = (() => { try { return Object.assign({ theme: "cq", font: 14, wrap: fal
 function saveIde() { localStorage.setItem(IDE_KEY, JSON.stringify(ide)); }
 
 /* ---------- Server engine availability ---------- */
-let serverEngineReady = null;
-async function pingServer() { try { const r = await fetch("/api/runtimes"); serverEngineReady = r.ok; } catch { serverEngineReady = false; } return serverEngineReady; }
+/* Ironyx Code runs with OR without a Node backend:
+   - With the bundled Docker stack: code goes through the local /api/execute
+     (self-hosted Piston, with an automatic Wandbox fallback).
+   - As a pure-static deploy (e.g. uploaded to a WordPress site): there is no
+     Node server, so the browser talks DIRECTLY to the free public Wandbox engine
+     (wandbox.org) — it's CORS-enabled and needs no API key. The compiler list is
+     pre-warmed on boot so the first remote run is fast. */
+const WANDBOX_API = "https://wandbox.org/api";
+/* track.lang -> Wandbox language name (only languages Wandbox supports) */
+const WANDBOX_LANG = {
+  "c": "C", "c++": "C++", "csharp": "C#", "go": "Go", "rust": "Rust",
+  "ruby": "Ruby", "php": "PHP", "lua": "Lua", "perl": "Perl",
+  "bash": "Bash script", "sqlite3": "SQL", "java": "Java", "scala": "Scala",
+  "haskell": "Haskell", "swift": "Swift", "elixir": "Elixir",
+  "python": "Python", "javascript": "JavaScript",
+};
+let serverEngineReady = null;     // is a local Node /api backend reachable?
+let wandboxList = null;           // cached compiler catalog from Wandbox
+let _wandboxListP = null;
+function preloadWandbox() {
+  if (wandboxList) return Promise.resolve(wandboxList);
+  if (_wandboxListP) return _wandboxListP;
+  const ctrl = new AbortController(); const id = setTimeout(() => ctrl.abort(), 9000);
+  _wandboxListP = fetch(`${WANDBOX_API}/list.json`, { signal: ctrl.signal })
+    .then((r) => (r.ok ? r.json() : null))
+    .then((d) => { wandboxList = Array.isArray(d) ? d : null; return wandboxList; })
+    .catch(() => null)
+    .finally(() => clearTimeout(id));
+  return _wandboxListP;
+}
+function pickWandboxCompiler(language) {
+  const wl = WANDBOX_LANG[language];
+  if (!wl || !wandboxList) return null;
+  const matches = wandboxList.filter((c) => c.language === wl);
+  if (!matches.length) return null;
+  // Prefer the latest STABLE compiler; "-head" nightlies are flaky, use last.
+  const stable = matches.find((c) => !/head/i.test(c.name));
+  return (stable || matches[0]).name;
+}
+async function pingServer() {
+  try { const r = await fetch("/api/runtimes"); serverEngineReady = r.ok; }
+  catch { serverEngineReady = false; }
+  if (!serverEngineReady) preloadWandbox(); // warm the public engine in the background
+  return serverEngineReady;
+}
 
 /* ---------- Router ---------- */
 function go(route, params = {}) { const q = new URLSearchParams(params).toString(); location.hash = `#${route}${q ? "?" + q : ""}`; }
@@ -95,7 +170,7 @@ function renderHome() {
     const doneN = t.lessons.filter((l) => state.completed[l.id]).length;
     const pct = Math.round((doneN / t.lessons.length) * 100);
     const card = document.createElement("div"); card.className = "track-card"; card.style.setProperty("--clr", t.color);
-    card.innerHTML = `<div class="track-icon">${t.icon}</div><h3>${t.name}</h3><div class="blurb">${t.blurb}</div>
+    card.innerHTML = `<div class="track-icon">${t.icon}</div><h3>${esc(t.name)}</h3><div class="blurb">${esc(t.blurb)}</div>
       <div class="progress-bar"><span style="width:${pct}%"></span></div>
       <div class="track-meta"><span class="lessons">${doneN}/${t.lessons.length} lessons</span><span class="lessons">${pct}%</span></div>`;
     card.onclick = () => go("track", { id: t.id });
@@ -130,7 +205,7 @@ function renderTrack(id) {
     m.items.forEach((l) => {
       const done = !!state.completed[l.id]; const diff = (l.difficulty || "Easy").toLowerCase();
       const row = document.createElement("div"); row.className = "lesson-row" + (done ? " done" : ""); row.dataset.title = l.title.toLowerCase();
-      row.innerHTML = `<div class="lesson-num">${done ? "✓" : "▷"}</div><div class="lesson-info"><h4>${l.title}</h4><div class="meta"><span class="pill ${diff}">${l.difficulty}</span></div></div><div class="lesson-xp">+${l.xp} XP</div>`;
+      row.innerHTML = `<div class="lesson-num">${done ? "✓" : "▷"}</div><div class="lesson-info"><h4>${esc(l.title)}</h4><div class="meta"><span class="pill ${diff}">${l.difficulty}</span></div></div><div class="lesson-xp">+${l.xp} XP</div>`;
       row.onclick = () => go("lesson", { track: t.id, id: l.id });
       list.appendChild(row);
     });
@@ -181,19 +256,22 @@ function renderAuth(mode) {
   $("auSwitch").onclick = () => go("auth", { mode: isReg ? "login" : "register" });
   $("auGuest").onclick = () => { logoutUser(); go("home"); };
   const showErr = (m) => { const e = $("auErr"); e.textContent = m; e.classList.remove("hidden"); };
-  $("auGo").onclick = () => {
-    const name = $("auName").value, pass = $("auPass").value;
-    if (isReg) {
-      if (pass !== $("auPass2").value) return showErr("Passwords don't match.");
-      const err = registerUser(name, pass);
-      if (err) return showErr(err);
-      toast("Welcome, " + displayName() + "! 🎉", "good");
-    } else {
-      const err = loginUser(name, pass);
-      if (err) return showErr(err);
-      toast("Welcome back, " + displayName() + "!", "good");
-    }
-    go("home");
+  $("auGo").onclick = async () => {
+    const goBtn = $("auGo"); goBtn.disabled = true;
+    try {
+      const name = $("auName").value, pass = $("auPass").value;
+      if (isReg) {
+        if (pass !== $("auPass2").value) return showErr("Passwords don't match.");
+        const err = await registerUser(name, pass);
+        if (err) return showErr(err);
+        toast("Welcome, " + displayName() + "! 🎉", "good");
+      } else {
+        const err = await loginUser(name, pass);
+        if (err) return showErr(err);
+        toast("Welcome back, " + displayName() + "!", "good");
+      }
+      go("home");
+    } finally { goBtn.disabled = false; }
   };
   $("auName").addEventListener("keydown", (e) => { if (e.key === "Enter") $("auPass").focus(); });
   $("auPass").addEventListener("keydown", (e) => { if (e.key === "Enter" && !isReg) $("auGo").click(); });
@@ -243,7 +321,7 @@ function ideToolbar(t) {
     <div class="settings-pop hidden" id="setPop">
       <label>Theme
         <select id="setTheme">
-          <option value="cq">CodeQuest Dark</option>
+          <option value="cq">Ironyx Dark</option>
           <option value="vs-dark">Midnight</option>
           <option value="hc-black">High Contrast</option>
           <option value="vs">Light</option>
@@ -489,6 +567,13 @@ async function runJsWorker(source, stdin, isTs) {
   let code = source;
   if (isTs) { try { const ts = await loadTS(); code = ts.transpile(source, { target: ts.ScriptTarget.ES2020 }); } catch (e) { return { stdout: "", stderr: e.message, code: 1 }; } }
   const workerSrc = `
+    // Sandbox hardening: user code runs with no network or script-import access.
+    const __blocked = (n) => () => { throw new Error(n + " is disabled in the sandbox."); };
+    self.importScripts = __blocked("importScripts");
+    self.fetch = () => Promise.reject(new Error("Network access is disabled in the sandbox."));
+    self.XMLHttpRequest = __blocked("XMLHttpRequest");
+    self.WebSocket = __blocked("WebSocket");
+    self.EventSource = __blocked("EventSource");
     let __out = "";
     const __inputLines = ${JSON.stringify((stdin || "").split("\n"))}; let __ic = 0;
     const prompt = () => (__ic < __inputLines.length ? __inputLines[__ic++] : "");
@@ -502,34 +587,41 @@ async function runJsWorker(source, stdin, isTs) {
     w.postMessage(code);
   });
 }
-/* --- Server engine: local backend first, then direct Wandbox (for static hosting like GitHub Pages) --- */
-const WB_LANG = { "c": "C", "c++": "C++", "csharp": "C#", "go": "Go", "rust": "Rust", "ruby": "Ruby", "php": "PHP", "lua": "Lua", "perl": "Perl", "bash": "Bash script", "sqlite3": "SQL", "java": "Java", "scala": "Scala", "haskell": "Haskell", "swift": "Swift", "elixir": "Elixir", "r": "R", "python": "Python", "javascript": "JavaScript" };
-let wbList = null;
-async function wbCompilers() { if (wbList) return wbList; const r = await fetch("https://wandbox.org/api/list.json"); wbList = await r.json(); return wbList; }
-async function runWandboxDirect(language, source, stdin) {
-  const wl = WB_LANG[language];
-  if (!wl) return { stdout: "", stderr: "This language needs the bundled engine — run the project with Docker for full execution.", code: 1, offline: true };
+async function runWandboxBrowser(language, source, stdin) {
+  if (!wandboxList) await preloadWandbox();
+  const compiler = pickWandboxCompiler(language);
+  if (!compiler) return { stdout: "", stderr: "", code: 1, offline: true };
+  // Wandbox saves Java as prog.java, so `public class Main` must lose `public`.
   let code = source;
   if (language === "java") code = code.replace(/\bpublic\s+(class|interface|enum)\s+/g, "$1 ");
+  const ctrl = new AbortController(); const id = setTimeout(() => ctrl.abort(), 40000);
   try {
-    const list = await wbCompilers();
-    const matches = list.filter((c) => c.language === wl);
-    if (!matches.length) return { stdout: "", stderr: "No public compiler available for this language.", code: 1, offline: true };
-    const head = matches.find((c) => /(^|-)head$/.test(c.name) || c.name.includes("-head"));
-    const compiler = (head || matches[0]).name;
-    const r = await fetch("https://wandbox.org/api/compile.json", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ compiler, code, stdin: stdin || "" }) });
-    if (!r.ok) return { stdout: "", stderr: "Execution service error " + r.status, code: 1 };
-    const d = await r.json();
-    const ec = typeof d.status === "string" ? parseInt(d.status, 10) || 0 : (d.status || 0);
-    return { stdout: d.program_output || "", stderr: (d.compiler_error || "") + (d.program_error || ""), code: ec };
-  } catch (e) { return { stdout: "", stderr: "Couldn't reach the public execution service. For guaranteed local execution, run the project with Docker.", code: 1, offline: true }; }
+    const res = await fetch(`${WANDBOX_API}/compile.json`, {
+      method: "POST", headers: { "Content-Type": "application/json" }, signal: ctrl.signal,
+      body: JSON.stringify({ compiler, code, stdin: stdin || "" }),
+    });
+    if (!res.ok) return { stdout: "", stderr: `public engine HTTP ${res.status}`, code: 1 };
+    const d = await res.json();
+    const exit = typeof d.status === "string" ? parseInt(d.status, 10) || 0 : (d.status || 0);
+    return { stdout: d.program_output || "", stderr: (d.compiler_error || "") + (d.program_error || ""), code: exit };
+  } catch (e) {
+    if (e.name === "AbortError") return { stdout: "", stderr: "⏱ Timed out (possible infinite loop or slow network).", code: 124 };
+    return { stdout: "", stderr: e.message, code: 1, offline: true };
+  } finally { clearTimeout(id); }
 }
 async function runServer(language, source, stdin) {
-  try {
-    const res = await fetch("api/execute", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ language, source, stdin }) });
-    if (res.ok) { const data = await res.json(); const run = data.run || {}, comp = data.compile || {}; return { stdout: run.stdout || "", stderr: (comp.stderr || "") + (run.stderr || ""), code: run.code ?? 0 }; }
-  } catch (e) { /* no local backend → fall through to Wandbox */ }
-  return runWandboxDirect(language, source, stdin);
+  if (serverEngineReady === null) await pingServer();
+  // 1) Local Node backend (the bundled Docker stack: Piston → Wandbox).
+  if (serverEngineReady) {
+    try {
+      const res = await fetch("/api/execute", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ language, source, stdin }) });
+      const data = await res.json();
+      if (res.ok) { const run = data.run || {}, comp = data.compile || {}; return { stdout: run.stdout || "", stderr: (comp.stderr || "") + (run.stderr || ""), code: run.code ?? 0 }; }
+      // server reachable but errored → fall through to the public engine
+    } catch (_) { serverEngineReady = false; }
+  }
+  // 2) Browser-direct public engine — works on static hosting (WordPress, Netlify, S3…) with no Node server.
+  return runWandboxBrowser(language, source, stdin);
 }
 
 /* ---------- run helpers ---------- */
@@ -545,7 +637,7 @@ function runningUI() {
 }
 function restoreBtn(btn) { if (btn) { btn.disabled = false; btn.innerHTML = btn.dataset.html; } }
 function esc(s) { return (s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
-function offlineMsg(track) { return `<span class="err">The "${track.name}" engine isn't reachable.</span>\n\nPython, JavaScript & TypeScript run in your browser.\nMany compiled languages use the free public engine automatically.\nFor every language locally, start the bundled engine:\n\n  <b>docker compose up --build</b>\n\nthen reload. (See README.)`; }
+function offlineMsg(track) { return `<span class="err">Couldn't reach a runtime for "${track.name}" right now.</span>\n\nPython, JavaScript & TypeScript always run in your browser — no setup.\nOther languages use the free public engine automatically (needs internet).\n\nIf you're offline, or want every language to run locally, start the bundled engine:\n\n  <b>docker compose up --build</b>\n\nthen reload. (See README.)`; }
 
 async function runRaw(track, source) {
   if (track.engine === "web" || track.engine === "static") return runWebPreview(track, source);
@@ -637,7 +729,7 @@ function awardLesson(track, lesson) {
 }
 function checkBadges(track) {
   const grant = (id, e, ti, tx) => { if (state.badges[id]) return; state.badges[id] = true; save(); setTimeout(() => showModal(e, ti, tx), 400); };
-  if (completedCount() === 1) grant("first", "🥇", "First Solve!", "Welcome to CodeQuest!");
+  if (completedCount() === 1) grant("first", "🥇", "First Solve!", "Welcome to Ironyx Code!");
   if (track.lessons.every((l) => state.completed[l.id])) grant("track-" + track.id, track.icon, `${track.name} Master`, `You finished every ${track.name} challenge!`);
   if (state.streak >= 3) grant("streak3", "🔥", "On Fire!", "3-day streak reached.");
   if (completedCount() >= 10) grant("ten", "🏅", "Double Digits", "10 challenges solved!");
@@ -667,4 +759,9 @@ function mdBlock(s) {
 }
 
 /* ---------- boot ---------- */
-refreshChip(); pingServer(); render();
+refreshChip(); pingServer(); preloadWandbox(); render();
+/* Warm up the Python engine loader during idle time (no-op if never used). */
+(function () {
+  const prefetch = () => { const l = document.createElement("link"); l.rel = "prefetch"; l.as = "script"; l.href = "https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js"; document.head.appendChild(l); };
+  if ("requestIdleCallback" in window) requestIdleCallback(prefetch, { timeout: 4000 }); else setTimeout(prefetch, 2500);
+})();

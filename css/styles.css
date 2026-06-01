@@ -1,5 +1,5 @@
 /* ============================================================
-   CodeQuest — Starbucks-inspired design system
+   Ironyx Code — Starbucks-inspired design system
    Warm cream canvas · four-tier green · gold rewards · pill buttons
    ============================================================ */
 :root {
@@ -335,3 +335,27 @@ select.lang-select { background: var(--white); border: 1px solid var(--hair); co
 .auth-alt a, .auth-guest a { color: var(--accent); font-weight: 700; cursor: pointer; }
 .auth-guest { margin-top: 10px; }
 .auth-note { font-size: 11px; color: var(--ink-soft); margin-top: 16px; line-height: 1.5; }
+
+
+/* ---------- Site footer (Made by Ankush) ---------- */
+.site-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 22px 16px calc(22px + env(safe-area-inset-bottom, 0px));
+  margin-top: 40px;
+  border-top: 1px solid var(--ceramic, #edebe9);
+  background: var(--cool, #f9f9f9);
+  color: #6b6b6b;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: .2px;
+  text-align: center;
+}
+.site-footer .accent { color: var(--accent, #00754A); }
+.site-footer .sep { opacity: .45; }
+@media (max-width: 480px) {
+  .site-footer { font-size: 12px; padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)); }
+}

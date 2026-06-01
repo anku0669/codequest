@@ -3,29 +3,39 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CodeQuest — Learn to Code by Playing</title>
-  <meta name="description" content="A free, gamified, browser-based coding platform. Solve interactive challenges in 20+ languages, earn XP, build streaks, and level up." />
+  <title>Ironyx Code — Learn to Code by Playing</title>
+  <meta name="description" content="Ironyx Code is a free, gamified coding platform. Solve 4,800+ interactive challenges across 30+ languages in a full browser IDE, run real code instantly, earn XP, build daily streaks, and climb the leaderboard." />
+  <meta name="theme-color" content="#0f1216" />
+  <!-- Open Graph / social previews -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Ironyx Code — Learn to Code by Playing" />
+  <meta property="og:description" content="Play your way to fluent code: 4,800+ challenges, 30+ languages, a real browser IDE, XP, streaks, badges and a leaderboard. 100% free." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Ironyx Code — Learn to Code by Playing" />
+  <meta name="twitter:description" content="4,800+ challenges, 30+ languages, a real browser IDE, XP & streaks. 100% free." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <link rel="preconnect" href="https://emkc.org" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Manrope:wght@500;600;700;800&family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/styles.css" />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8E%AE%3C/text%3E%3C/svg%3E" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9A%A1%3C/text%3E%3C/svg%3E" />
 </head>
 <body>
   <!-- Top navigation -->
   <header class="topbar">
-    <div class="brand" id="brandHome">
-      <span class="logo">🎮</span>
-      <span class="brand-name">Code<span class="accent">Quest</span></span>
+    <div class="brand" id="brandHome" role="button" tabindex="0" aria-label="Ironyx Code home">
+      <span class="logo" aria-hidden="true">⚡</span>
+      <span class="brand-name">Ironyx<span class="accent"> Code</span></span>
     </div>
-    <nav class="top-nav">
+    <nav class="top-nav" aria-label="Primary">
       <a data-route="home" class="active">Learn</a>
       <a data-route="playground">Playground</a>
       <a data-route="leaderboard">Leaderboard</a>
     </nav>
-    <div class="player-chip" id="playerChip">
-      <div class="streak" title="Daily streak">🔥 <span id="chipStreak">0</span></div>
-      <div class="level-badge">Lv <span id="chipLevel">1</span></div>
-      <div class="xp-mini"><span id="chipXp">0</span> XP</div>
+    <div class="player-chip" id="playerChip" aria-label="Your progress">
+      <div class="streak" title="Daily streak — solve a challenge each day to keep it alive" aria-label="Daily streak">🔥 <span id="chipStreak">0</span></div>
+      <div class="level-badge" title="Your level — grows as you earn XP" aria-label="Level">Lv <span id="chipLevel">1</span></div>
+      <div class="xp-mini" title="Experience points earned from solving challenges" aria-label="Experience points"><span id="chipXp">0</span> XP</div>
     </div>
     <div class="auth-slot" id="authSlot"></div>
   </header>
@@ -33,12 +43,12 @@
   <main id="app"></main>
 
   <!-- Toast -->
-  <div id="toast" class="toast"></div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
   <!-- Level-up / badge modal -->
-  <div id="modal" class="modal-overlay hidden">
+  <div id="modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="modal-card">
-      <div class="modal-emoji" id="modalEmoji">🎉</div>
+      <div class="modal-emoji" id="modalEmoji" aria-hidden="true">🎉</div>
       <h2 id="modalTitle">Nice!</h2>
       <p id="modalText">You did it.</p>
       <button class="btn primary" id="modalClose">Continue</button>
@@ -46,7 +56,14 @@
   </div>
 
   <!-- Frap: signature floating CTA -->
-  <a class="frap" href="#playground" title="Open the IDE Playground" aria-label="Open Playground">&lt;/&gt;</a>
+  <a class="frap" href="#playground" title="Open the IDE Playground" aria-label="Open the IDE Playground">&lt;/&gt;</a>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <span>Made by <strong class="accent">Ankush</strong></span>
+    <span class="sep" aria-hidden="true">·</span>
+    <span>⚡ Ironyx Code</span>
+  </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js"></script>
   <script src="data/curriculum.js"></script>
