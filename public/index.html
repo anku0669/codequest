@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CodeQuest — Learn to Code by Playing</title>
+  <meta name="description" content="A free, gamified, browser-based coding platform. Solve interactive challenges in 20+ languages, earn XP, build streaks, and level up." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Manrope:wght@500;600;700;800&family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8E%AE%3C/text%3E%3C/svg%3E" />
+</head>
+<body>
+  <!-- Top navigation -->
+  <header class="topbar">
+    <div class="brand" id="brandHome">
+      <span class="logo">🎮</span>
+      <span class="brand-name">Code<span class="accent">Quest</span></span>
+    </div>
+    <nav class="top-nav">
+      <a data-route="home" class="active">Learn</a>
+      <a data-route="playground">Playground</a>
+      <a data-route="leaderboard">Leaderboard</a>
+    </nav>
+    <div class="player-chip" id="playerChip">
+      <div class="streak" title="Daily streak">🔥 <span id="chipStreak">0</span></div>
+      <div class="level-badge">Lv <span id="chipLevel">1</span></div>
+      <div class="xp-mini"><span id="chipXp">0</span> XP</div>
+    </div>
+    <div class="auth-slot" id="authSlot"></div>
+  </header>
+
+  <main id="app"></main>
+
+  <!-- Toast -->
+  <div id="toast" class="toast"></div>
+
+  <!-- Level-up / badge modal -->
+  <div id="modal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-emoji" id="modalEmoji">🎉</div>
+      <h2 id="modalTitle">Nice!</h2>
+      <p id="modalText">You did it.</p>
+      <button class="btn primary" id="modalClose">Continue</button>
+    </div>
+  </div>
+
+  <!-- Frap: signature floating CTA -->
+  <a class="frap" href="#playground" title="Open the IDE Playground" aria-label="Open Playground">&lt;/&gt;</a>
+
+  <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js"></script>
+  <script src="data/curriculum.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

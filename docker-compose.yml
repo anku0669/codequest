@@ -1,0 +1,48 @@
+# CodeQuest — full self-contained stack.
+#   codequest    : the web app (UI + API)
+#   piston       : self-hosted code execution engine (free, no API key, no whitelist)
+#   piston-init  : one-shot job that installs the 24 language runtimes on first boot
+#
+#   Run with:  docker compose up --build
+#   Open:      http://localhost:3000
+#
+# NOTE: First boot downloads language runtimes into the `piston_packages` volume.
+#       This can take several minutes depending on your connection. Subsequent
+#       boots are fast because the volume is cached.
+
+services:
+  piston:
+    image: ghcr.io/engineer-man/piston
+    container_name: codequest-piston
+    privileged: true          # required by Piston to sandbox executions
+    ports:
+      - "2000:2000"
+    volumes:
+      - piston_packages:/piston/packages
+    restart: unless-stopped
+
+  piston-init:
+    build: .
+    container_name: codequest-piston-init
+    depends_on:
+      - piston
+    environment:
+      - PISTON_URL=http://piston:2000/api/v2
+    command: ["node", "scripts/install-languages.js"]
+    restart: "no"
+
+  codequest:
+    build: .
+    container_name: codequest
+    depends_on:
+      - piston
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - PISTON_URL=http://piston:2000/api/v2
+    restart: unless-stopped
+
+volumes:
+  piston_packages:
