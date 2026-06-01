@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Web / markup / devops tracks for CodeQuest.
+"""Web / markup / devops tracks for Ironyx.
 These languages don't produce stdout, so challenges are graded by checking the
 user's code CONTAINS the required pieces (expectedAll tokens). HTML & CSS get a
 live preview; the rest are validated structurally."""

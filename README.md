@@ -1,118 +1,109 @@
-<div align="center">
+# ⚡ Ironyx Code
 
-# 🎮 CodeQuest
+A **free, gamified, browser-based coding platform**. Pick from **34 tracks** (24 programming languages + HTML, CSS, SCSS, JSON, YAML, Markdown, XML, Dockerfile, GraphQL, Regex), solve **4,800+ interactive challenges**, learn from built-in study material, write code in a **full browser IDE** (Monaco, the VS Code editor), run it for real, earn **XP**, build **daily streaks**, **level up**, and unlock **badges**.
 
-### Learn to code by *playing*.
+![node](https://img.shields.io/badge/Node-20-green) ![editor](https://img.shields.io/badge/Editor-Monaco-blue) ![langs](https://img.shields.io/badge/Tracks-34-orange) ![license](https://img.shields.io/badge/License-MIT-purple)
 
-A free, gamified, browser-based coding platform — solve interactive challenges in **34 languages**, write code in a real **in-browser IDE**, earn **XP**, build **streaks**, climb **leagues**, and learn from a deep **per-language guide**.
-
-[![Live Demo](https://img.shields.io/badge/▶_Live_Demo-006241?style=for-the-badge)](https://anku0669.github.io/codequest/)
-&nbsp;
-![Languages](https://img.shields.io/badge/Languages-34-00754A?style=for-the-badge)
-![Challenges](https://img.shields.io/badge/Challenges-4800%2B-cba258?style=for-the-badge)
-![License](https://img.shields.io/badge/License-MIT-1E3932?style=for-the-badge)
-
-**🔗 Live site: https://anku0669.github.io/codequest/**
-
-</div>
+> **Runs two ways:** as a self-contained **Docker** stack (every language locally), **or** as a pure **static site** you can upload to a **WordPress** website — no Node server required.
 
 ---
 
-## ✨ Features
+## ⚙️ How code runs (the compiler)
 
-- **34 language tracks** — Python, JavaScript, TypeScript, Java, C, C++, C#, Go, Rust, Ruby, PHP, Swift, Kotlin, Bash, Lua, Perl, Dart, Scala, Haskell, Elixir, R, Julia, Clojure, SQL + **HTML, CSS, SCSS, JSON, YAML, Markdown, XML, Dockerfile, GraphQL, Regex**.
-- **4,800+ interactive challenges** organized into modules (Output → Variables → Operators → Strings → Conditionals → Loops → Functions → Collections → Projects).
-- **🧩 DSA Challenges** — 57 LeetCode-style problems per core language (Two Sum, palindrome, Fibonacci, prime, GCD, sorting, search, FizzBuzz, and more).
-- **📚 Per-language Learning Guide** — a huge **22-chapter, zero-to-advanced** guide for every language, each chapter with rich explanations and real code examples.
-- **⌨️ Full in-browser IDE** — Monaco (the editor behind VS Code): themes, font size, word-wrap, minimap, format, copy, download, fullscreen, live status bar, **stdin**, **per-lesson auto-save**, and **⌘/Ctrl + Enter** to run.
-- **👤 Accounts** — local Register / Login with per-profile progress (XP, streaks, badges) and a guest mode.
-- **🏆 Leagues & badges** — Bronze → Diamond leagues with progress, your standing, and achievement badges.
-- **Real code execution**
-  - **Python** runs in the browser via **Pyodide** (WASM).
-  - **JavaScript / TypeScript** run in a sandboxed **Web Worker**.
-  - **Compiled languages** run via the free public **Wandbox** API (or a bundled **Piston** engine when self-hosted with Docker).
-  - **Markup/structure tracks** are graded by checking your code contains the right constructs, with a **live preview** for HTML & CSS.
-- **Top-notch UI** — a warm, clean, Starbucks-inspired design (cream canvas, four-tier green, gold accents, pill buttons, no gradients).
+Ironyx Code uses a layered execution strategy so it works **with or without a server**:
 
----
+| Layer | Languages | Where it runs | Needs a server? |
+|-------|-----------|---------------|-----------------|
+| **Browser (Pyodide WASM)** | Python | In the user's browser | ❌ none |
+| **Browser (sandboxed Web Worker)** | JavaScript, TypeScript | In the user's browser | ❌ none |
+| **Browser → Wandbox** | C, C++, C#, Go, Rust, Ruby, PHP, Lua, Perl, Bash, SQL, Java, Scala, Haskell, Swift, Elixir | Free public API (CORS, **no key**) | ❌ none |
+| **Server → Piston** | All 24 languages | Self-hosted engine (Docker) | ✅ `docker compose up` |
 
-## 🚀 Live Demo
+**Result:**
+- **Static / WordPress (no Node):** Python/JS/TS run in-browser and ~16 more languages run via the free Wandbox API directly from the browser — **most languages work instantly, no setup.**
+- **Docker stack:** the bundled Piston engine runs **all 24** languages locally, with Wandbox as an automatic backup.
 
-👉 **https://anku0669.github.io/codequest/**
-
-> The live site is fully static. Python/JS/TS and all structure-graded tracks run entirely in your browser; compiled languages run via the public Wandbox API. For guaranteed local execution of **all** languages, run it with Docker (below).
+No API keys anywhere. The compiler list is pre-warmed on load so the first remote run is fast.
 
 ---
 
-## 🖥️ Run locally
+## 🚀 Quick start (Docker — test it locally)
 
-### Option A — Node (recommended for full features)
+Run the full self-hosted stack (web app + Piston engine + auto language install):
+
+```bash
+docker compose up --build
+```
+
+Then open **http://localhost:3000**.
+
+> First boot downloads the language runtimes into a cached volume (a few minutes). Later boots are fast.
+
+### Or run just the web app (no Docker)
+
 ```bash
 npm install
 npm start
 # open http://localhost:3000
 ```
 
-### Option B — Docker (bundled multi-language engine, all 34 languages execute)
+Without Docker, Python/JS/TS run in-browser and the other languages use the free public Wandbox engine automatically.
+
+---
+
+## 🌐 Deploy to a WordPress website
+
+Ironyx Code's front-end is 100% static (HTML/CSS/JS), uses hash-based routing, and needs **no Node server** — perfect for WordPress.
+
+The upload-ready files are in the **`wordpress/`** folder. See **[WORDPRESS.md](WORDPRESS.md)** for step-by-step instructions (upload + embed via iframe). Short version:
+
+1. Upload the contents of `wordpress/` to your site (e.g. `wp-content/uploads/ironyx-code/`).
+2. Add a page with an iframe pointing at `…/ironyx-code/index.html`.
+3. Done — Python/JS/TS run in the visitor's browser; other languages run via the free Wandbox engine.
+
+---
+
+## 🧱 Project structure
+
+```
+ironyx-code/
+├─ public/                 # the app (also the static site)
+│  ├─ index.html
+│  ├─ css/styles.css
+│  ├─ js/app.js            # SPA: IDE, challenges, XP, multi-engine compiler
+│  └─ data/curriculum.js   # generated: 34 tracks, 4,800+ lessons
+├─ wordpress/              # upload-ready static copy for WordPress
+├─ server.js               # Node API: Piston → Wandbox execution proxy
+├─ scripts/install-languages.js
+├─ Dockerfile
+├─ docker-compose.yml
+├─ generate_curriculum.py  # rebuild curriculum.js (edit + `npm run generate`)
+└─ *.py                    # challenge/content banks used by the generator
+```
+
+## 🔁 Rebuilding the curriculum
+
 ```bash
-docker compose up --build
-# open http://localhost:3000
+npm run generate   # runs generate_curriculum.py → public/data/curriculum.js
 ```
 
-### Option C — Just the static site
-```bash
-cd public && python3 -m http.server 8000
-# open http://localhost:8000
-```
+## 🔒 Security & performance
 
----
+**Security**
+- **Hardened HTTP headers** — Content-Security-Policy, `X-Content-Type-Options: nosniff`, `Referrer-Policy`, `Permissions-Policy`; `X-Powered-By` removed. Framing is intentionally allowed so the app can be embedded in a WordPress iframe.
+- **Sandboxed JS/TS execution** — user code runs in a Web Worker with `fetch`, `XMLHttpRequest`, `WebSocket`, `EventSource` and `importScripts` disabled (no network / no exfiltration).
+- **Strict input validation** — `/api/execute` validates the language, caps source (200 KB) and stdin (100 KB), and rejects malformed requests.
+- **Rate limiting** — in-memory per-IP limiter (default 40 runs/min) to prevent abuse.
+- **No secrets / generic errors** — no API keys anywhere; internal error details are logged server-side, not returned to clients (in production).
+- **Salted password hashing** — local profiles store a salted **SHA-256** hash via Web Crypto (never the raw password); legacy entries upgrade automatically on login.
+- **Non-root container** — the Docker image runs as the unprivileged `node` user with `tini` as PID 1.
 
-## 🧩 How it works
-
-```
-Browser (Monaco IDE + UI)
-│
-├─ Python  ─────────────▶ Pyodide (WASM, in-browser)
-├─ JS / TS ─────────────▶ sandboxed Web Worker
-├─ Markup/structure ────▶ graded by structure (HTML/CSS get a live preview)
-└─ Compiled languages ──▶ /api/execute → Piston (Docker)  ·  or Wandbox (public API)
-```
-
-Progress, accounts, streaks and badges are stored in the browser (`localStorage`).
-
----
-
-## 📁 Project structure
-
-```
-codequest/
-├── public/                 # the web app (this is what GitHub Pages serves)
-│   ├── index.html
-│   ├── css/styles.css
-│   ├── js/app.js           # SPA: routing, IDE, engines, auth, gamification
-│   └── data/curriculum.js  # all languages, challenges & guides (generated)
-├── server.js               # Express server + execution proxy (Piston → Wandbox)
-├── generate_curriculum.py  # builds the curriculum
-├── bigbank.py / dsa.py / morebank.py / webbank.py / guides.py
-├── scripts/install-languages.js
-├── Dockerfile · docker-compose.yml
-└── README.md
-```
-
-Regenerate the curriculum with `python3 generate_curriculum.py`.
-
----
-
-## 🤝 Contributing
-
-Issues and PRs welcome! Add challenges in the generator files, then re-run `generate_curriculum.py`.
+**Performance**
+- **gzip compression** — the 3 MB curriculum is served at **~300 KB** (≈90% smaller).
+- **Long-lived caching + ETags** for static assets; `index.html` stays revalidated.
+- **Engine pre-warming** — the remote compiler list loads on boot and the Python engine is prefetched during idle time, so first runs are fast.
+- **In-browser engines** — Python/JS/TS never hit the network for execution.
 
 ## 📝 License
 
-[MIT](LICENSE) — free to use, learn from, and build on.
-
-<div align="center">
-
-Built with ❤️ for learners everywhere. **[Try it live →](https://anku0669.github.io/codequest/)**
-
-</div>
+MIT.

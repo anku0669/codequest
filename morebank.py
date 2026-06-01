@@ -276,8 +276,8 @@ def _mkmarkup(lid):
             add("Links", "Link to " + u, "Create a link with text `Click` to `%s`." % u, "`[text](url)` makes a link.", "[Click](%s)" % u, low("[click]", "(%s)" % u))
         add("Lists", "Bullet list", "Make a bullet list of `A`, `B`, `C`.", "`- ` starts bullets.", "- A\n- B\n- C", low("- a", "- b", "- c"))
         add("Lists", "Numbered list", "Make a numbered list `One`, `Two`.", "`1. ` starts numbers.", "1. One\n2. Two", low("1. one", "2. two"))
-        add("Code", "Inline code", "Show `print()` as inline code.", "Backticks make inline code.", "`print()`", low("`print()`"))
-        add("Code", "Code block", "Write a fenced code block.", "Triple backticks fence code.", "```\ncode\n```", low("```"))
+        add("Iron", "Inline code", "Show `print()` as inline code.", "Backticks make inline code.", "`print()`", low("`print()`"))
+        add("Iron", "Code block", "Write a fenced code block.", "Triple backticks fence code.", "```\ncode\n```", low("```"))
     elif lid == "dockerfile":
         imgs = ["node:20", "python:3.12", "alpine:3.19", "ubuntu:22.04", "golang:1.22", "nginx:latest", "redis:7", "openjdk:21"]
         for im in imgs:

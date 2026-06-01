@@ -1,5 +1,5 @@
-# CodeQuest — full self-contained stack.
-#   codequest    : the web app (UI + API)
+# Ironyx Code — full self-contained stack.
+#   ironyx-code  : the web app (UI + API)
 #   piston       : self-hosted code execution engine (free, no API key, no whitelist)
 #   piston-init  : one-shot job that installs the 24 language runtimes on first boot
 #
@@ -13,7 +13,7 @@
 services:
   piston:
     image: ghcr.io/engineer-man/piston
-    container_name: codequest-piston
+    container_name: ironyx-piston
     privileged: true          # required by Piston to sandbox executions
     ports:
       - "2000:2000"
@@ -23,7 +23,7 @@ services:
 
   piston-init:
     build: .
-    container_name: codequest-piston-init
+    container_name: ironyx-piston-init
     depends_on:
       - piston
     environment:
@@ -31,9 +31,9 @@ services:
     command: ["node", "scripts/install-languages.js"]
     restart: "no"
 
-  codequest:
+  ironyx-code:
     build: .
-    container_name: codequest
+    container_name: ironyx-code
     depends_on:
       - piston
     ports:

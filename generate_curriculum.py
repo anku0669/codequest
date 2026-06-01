@@ -50,14 +50,14 @@ BRIEF = {
  "hello": "Every journey starts with a greeting. Print exactly `Hello, World!`.",
  "var":   "Create a variable holding `42` and print it. Expected output: `42`.",
  "math":  "Compute and print `7 * 6`. Expected output: `42`.",
- "str":   "Join `Code` and `Quest` into one word and print it. Expected output: `CodeQuest`.",
+ "str":   "Join `Iron` and `yx` into one word and print it. Expected output: `Ironyx`.",
  "cond":  "Given `n = 7`, print `odd` if it's odd, otherwise `even`. Expected output: `odd`.",
  "loop":  "Print the numbers 1, 2, and 3, each on its own line.",
  "compare": "Print `yes` if `5` is greater than `3`, otherwise `no`. Expected output: `yes`.",
  "while":   "Use a **while** loop to print 1, 2, and 3, each on its own line.",
  "func":    "Write a function `add(a, b)` that returns the sum, then print `add(20, 22)`. Expected: `42`.",
 }
-EXPECT = {"hello":"Hello, World!","var":"42","math":"42","str":"CodeQuest","cond":"odd","loop":"1\n2\n3",
+EXPECT = {"hello":"Hello, World!","var":"42","math":"42","str":"Ironyx","cond":"odd","loop":"1\n2\n3",
           "compare":"yes","while":"1\n2\n3","func":"42"}
 
 # Concept -> "how it works" explanation shown in every lesson.
@@ -67,7 +67,7 @@ EXPLAIN = {
  "math": "Computers calculate with **arithmetic operators**: `+` add, `-` subtract, `*` multiply, `/` divide, and `%` remainder. Expressions follow normal math precedence (multiplication before addition).\n\nExample: `7 * 6` is evaluated to `42` *before* it is printed, so the output is `42`.",
  "compare": "**Comparison operators** (`>`, `<`, `>=`, `<=`, `==`, `!=`) ask a yes/no question and produce a *boolean* (`true`/`false`). You pair them with a conditional to decide what to output.\n\nExample: `5 > 3` is true, so the program prints `yes`. If you changed it to `5 < 3` it would print `no`.",
  "cond": "**Conditionals** (`if` / `else`) run different code depending on whether a test is true. A common trick is the **modulo** operator `% 2`, which gives the remainder after dividing by 2: it's `0` for even numbers and `1` for odd numbers.\n\nExample: `7 % 2` is `1` (not zero) → `7` is odd, so we print `odd`.",
- "str": "**Strings** are sequences of characters (text). *Concatenation* joins two strings end-to-end into one.\n\nExample: joining `\"Code\"` and `\"Quest\"` gives `\"CodeQuest\"`. Most languages use `+`; some use `.` (PHP/Perl), `..` (Lua), `<>` (Elixir), `*` (Julia), or `||` (SQL).",
+ "str": "**Strings** are sequences of characters (text). *Concatenation* joins two strings end-to-end into one.\n\nExample: joining `\"Iron\"` and `\"yx\"` gives `\"Ironyx\"`. Most languages use `+`; some use `.` (PHP/Perl), `..` (Lua), `<>` (Elixir), `*` (Julia), or `||` (SQL).",
  "loop": "A **`for` loop** repeats a block of code a known number of times by walking a counter through a range of values.\n\nExample: looping from 1 to 3 and printing the counter each pass outputs three lines: `1`, `2`, `3`. Loops save you from copy-pasting the same line over and over.",
  "while": "A **`while` loop** keeps repeating *as long as* its condition stays true. You typically start a counter, do some work (print it), then change the counter each pass. When the condition becomes false, the loop stops.\n\nExample: start `i = 1`, print `i`, add 1, and repeat while `i <= 3` → prints `1`, `2`, `3`. ⚠️ If you forget to update the counter, the condition never turns false and you get an *infinite loop*.",
  "func": "A **function** is a reusable, named block of logic. It accepts inputs (*parameters*), does work, and usually *returns* a result you can use elsewhere. Define it once, call it as many times as you like with different arguments.\n\nExample: `add(a, b)` returns `a + b`, so calling `add(20, 22)` produces `42`. Functions keep code organized and avoid repetition.",
@@ -79,7 +79,7 @@ S["python"] = {
  "hello": ("# Print the greeting\n", 'print("Hello, World!")'),
  "var":   ("# Create a variable and print it\nx = \n", 'x = 42\nprint(x)'),
  "math":  ("# Print the product\n", 'print(7 * 6)'),
- "str":   ('a = "Code"\nb = "Quest"\n# Print them joined\n', 'print(a + b)'),
+ "str":   ('a = "Iron"\nb = "yx"\n# Print them joined\n', 'print(a + b)'),
  "cond":  ("n = 7\n# Print 'odd' or 'even'\n", 'print("odd" if n % 2 else "even")'),
  "loop":  ("# Loop and print 1..3\n", 'for i in range(1, 4):\n    print(i)'),
 }
@@ -87,7 +87,7 @@ S["javascript"] = {
  "hello": ("// Log the greeting\n", 'console.log("Hello, World!");'),
  "var":   ("// Declare a variable and log it\n", 'const x = 42;\nconsole.log(x);'),
  "math":  ("// Log the product\n", 'console.log(7 * 6);'),
- "str":   ('const a = "Code", b = "Quest";\n// Log them joined\n', 'console.log(a + b);'),
+ "str":   ('const a = "Iron", b = "yx";\n// Log them joined\n', 'console.log(a + b);'),
  "cond":  ("const n = 7;\n// Log 'odd' or 'even'\n", 'console.log(n % 2 ? "odd" : "even");'),
  "loop":  ("// Loop 1..3\n", 'for (let i = 1; i <= 3; i++) console.log(i);'),
 }
@@ -95,7 +95,7 @@ S["typescript"] = {
  "hello": ("const msg: string = \"\";\nconsole.log(msg);\n", 'const msg: string = "Hello, World!";\nconsole.log(msg);'),
  "var":   ("const x: number = 0;\nconsole.log(x);\n", 'const x: number = 42;\nconsole.log(x);'),
  "math":  ("// Log the product\n", 'console.log(7 * 6);'),
- "str":   ('const a: string = "Code";\nconst b: string = "Quest";\n', 'console.log(a + b);'),
+ "str":   ('const a: string = "Iron";\nconst b: string = "yx";\n', 'console.log(a + b);'),
  "cond":  ("const n: number = 7;\n", 'console.log(n % 2 ? "odd" : "even");'),
  "loop":  ("// Loop 1..3\n", 'for (let i = 1; i <= 3; i++) console.log(i);'),
 }
@@ -104,7 +104,7 @@ S["java"] = {
  "hello": (java("// print here"), java('System.out.println("Hello, World!");')),
  "var":   (java("int x = 0; // change me\n    System.out.println(x);"), java('int x = 42;\n    System.out.println(x);')),
  "math":  (java("// print the product"), java('System.out.println(7 * 6);')),
- "str":   (java('String a = "Code", b = "Quest";\n    // print joined'), java('String a = "Code", b = "Quest";\n    System.out.println(a + b);')),
+ "str":   (java('String a = "Iron", b = "yx";\n    // print joined'), java('String a = "Iron", b = "yx";\n    System.out.println(a + b);')),
  "cond":  (java("int n = 7;\n    // print odd/even"), java('int n = 7;\n    System.out.println(n % 2 != 0 ? "odd" : "even");')),
  "loop":  (java("// loop 1..3"), java('for (int i = 1; i <= 3; i++) System.out.println(i);')),
 }
@@ -113,7 +113,7 @@ S["c"] = {
  "hello": (cwrap("// print here"), cwrap('printf("Hello, World!\\n");')),
  "var":   (cwrap("int x = 0;\n    printf(\"%d\\n\", x);"), cwrap('int x = 42;\n    printf("%d\\n", x);')),
  "math":  (cwrap("// print product with %d"), cwrap('printf("%d\\n", 7 * 6);')),
- "str":   (cwrap("// print CodeQuest"), cwrap('printf("%s\\n", "CodeQuest");')),
+ "str":   (cwrap("// print Ironyx"), cwrap('printf("%s\\n", "Ironyx");')),
  "cond":  (cwrap("int n = 7;\n    // print odd/even"), cwrap('int n = 7;\n    printf("%s\\n", n % 2 ? "odd" : "even");')),
  "loop":  (cwrap("// loop 1..3"), cwrap('for (int i = 1; i <= 3; i++) printf("%d\\n", i);')),
 }
@@ -122,7 +122,7 @@ S["cpp"] = {
  "hello": (cpp("// print here"), cpp('cout << "Hello, World!" << endl;')),
  "var":   (cpp("int x = 0;\n    cout << x << endl;"), cpp('int x = 42;\n    cout << x << endl;')),
  "math":  (cpp("// print product"), cpp('cout << 7 * 6 << endl;')),
- "str":   (cpp("// build and print CodeQuest", "#include <string>\n"), cpp('string s = string("Code") + "Quest";\n    cout << s << endl;', "#include <string>\n")),
+ "str":   (cpp("// build and print Ironyx", "#include <string>\n"), cpp('string s = string("Iron") + "yx";\n    cout << s << endl;', "#include <string>\n")),
  "cond":  (cpp("int n = 7;\n    // print odd/even"), cpp('int n = 7;\n    cout << (n % 2 ? "odd" : "even") << endl;')),
  "loop":  (cpp("// loop 1..3"), cpp('for (int i = 1; i <= 3; i++) cout << i << endl;')),
 }
@@ -131,7 +131,7 @@ S["csharp"] = {
  "hello": (cs("// print here"), cs('Console.WriteLine("Hello, World!");')),
  "var":   (cs("int x = 0;\n    Console.WriteLine(x);"), cs('int x = 42;\n    Console.WriteLine(x);')),
  "math":  (cs("// print product"), cs('Console.WriteLine(7 * 6);')),
- "str":   (cs('// print joined'), cs('Console.WriteLine("Code" + "Quest");')),
+ "str":   (cs('// print joined'), cs('Console.WriteLine("Iron" + "yx");')),
  "cond":  (cs("int n = 7;"), cs('int n = 7;\n    Console.WriteLine(n % 2 != 0 ? "odd" : "even");')),
  "loop":  (cs("// loop 1..3"), cs('for (int i = 1; i <= 3; i++) Console.WriteLine(i);')),
 }
@@ -140,7 +140,7 @@ S["go"] = {
  "hello": (go("// print here"), go('fmt.Println("Hello, World!")')),
  "var":   (go("x := 0\n    fmt.Println(x)"), go('x := 42\n    fmt.Println(x)')),
  "math":  (go("// print product"), go('fmt.Println(7 * 6)')),
- "str":   (go('// print joined'), go('fmt.Println("Code" + "Quest")')),
+ "str":   (go('// print joined'), go('fmt.Println("Iron" + "yx")')),
  "cond":  (go("n := 7\n    // print odd/even"), go('n := 7\n    if n%2 != 0 {\n        fmt.Println("odd")\n    } else {\n        fmt.Println("even")\n    }')),
  "loop":  (go("// loop 1..3"), go('for i := 1; i <= 3; i++ {\n        fmt.Println(i)\n    }')),
 }
@@ -149,7 +149,7 @@ S["rust"] = {
  "hello": (rust("// print here"), rust('println!("Hello, World!");')),
  "var":   (rust("let x = 0;\n    println!(\"{}\", x);"), rust('let x = 42;\n    println!("{}", x);')),
  "math":  (rust("// print product"), rust('println!("{}", 7 * 6);')),
- "str":   (rust('// build & print CodeQuest'), rust('let s = format!("{}{}", "Code", "Quest");\n    println!("{}", s);')),
+ "str":   (rust('// build & print Ironyx'), rust('let s = format!("{}{}", "Iron", "yx");\n    println!("{}", s);')),
  "cond":  (rust("let n = 7;"), rust('let n = 7;\n    println!("{}", if n % 2 != 0 { "odd" } else { "even" });')),
  "loop":  (rust("// loop 1..=3"), rust('for i in 1..=3 {\n        println!("{}", i);\n    }')),
 }
@@ -157,7 +157,7 @@ S["ruby"] = {
  "hello": ("# print here\n", 'puts "Hello, World!"'),
  "var":   ("x = 0\nputs x\n", 'x = 42\nputs x'),
  "math":  ("# print product\n", 'puts 7 * 6'),
- "str":   ('# print joined\n', 'puts "Code" + "Quest"'),
+ "str":   ('# print joined\n', 'puts "Iron" + "yx"'),
  "cond":  ("n = 7\n", 'n = 7\nputs(n.odd? ? "odd" : "even")'),
  "loop":  ("# loop 1..3\n", '(1..3).each { |i| puts i }'),
 }
@@ -165,7 +165,7 @@ S["php"] = {
  "hello": ("<?php\n// echo here\n", '<?php\necho "Hello, World!\\n";'),
  "var":   ("<?php\n$x = 0;\necho $x . \"\\n\";\n", '<?php\n$x = 42;\necho $x . "\\n";'),
  "math":  ("<?php\n// echo product\n", '<?php\necho (7 * 6) . "\\n";'),
- "str":   ('<?php\n// echo joined\n', '<?php\necho "Code" . "Quest" . "\\n";'),
+ "str":   ('<?php\n// echo joined\n', '<?php\necho "Iron" . "yx" . "\\n";'),
  "cond":  ("<?php\n$n = 7;\n", '<?php\n$n = 7;\necho ($n % 2 ? "odd" : "even") . "\\n";'),
  "loop":  ("<?php\n// loop 1..3\n", '<?php\nfor ($i = 1; $i <= 3; $i++) echo $i . "\\n";'),
 }
@@ -173,7 +173,7 @@ S["swift"] = {
  "hello": ("// print here\n", 'print("Hello, World!")'),
  "var":   ("let x = 0\nprint(x)\n", 'let x = 42\nprint(x)'),
  "math":  ("// print product\n", 'print(7 * 6)'),
- "str":   ('// print joined\n', 'print("Code" + "Quest")'),
+ "str":   ('// print joined\n', 'print("Iron" + "yx")'),
  "cond":  ("let n = 7\n", 'let n = 7\nprint(n % 2 != 0 ? "odd" : "even")'),
  "loop":  ("// loop 1...3\n", 'for i in 1...3 {\n    print(i)\n}'),
 }
@@ -182,7 +182,7 @@ S["kotlin"] = {
  "hello": (kt("// print here"), kt('println("Hello, World!")')),
  "var":   (kt("val x = 0\n    println(x)"), kt('val x = 42\n    println(x)')),
  "math":  (kt("// print product"), kt('println(7 * 6)')),
- "str":   (kt('// print joined'), kt('println("Code" + "Quest")')),
+ "str":   (kt('// print joined'), kt('println("Iron" + "yx")')),
  "cond":  (kt("val n = 7"), kt('val n = 7\n    println(if (n % 2 != 0) "odd" else "even")')),
  "loop":  (kt("// loop 1..3"), kt('for (i in 1..3) println(i)')),
 }
@@ -190,7 +190,7 @@ S["bash"] = {
  "hello": ("# echo here\n", 'echo "Hello, World!"'),
  "var":   ("x=0\necho $x\n", 'x=42\necho $x'),
  "math":  ("# echo product\n", 'echo $((7 * 6))'),
- "str":   ('# echo joined\n', 'echo "Code""Quest"'),
+ "str":   ('# echo joined\n', 'echo "Iron""yx"'),
  "cond":  ("n=7\n", 'n=7\nif (( n % 2 )); then echo odd; else echo even; fi'),
  "loop":  ("# loop 1..3\n", 'for i in 1 2 3; do echo $i; done'),
 }
@@ -198,7 +198,7 @@ S["lua"] = {
  "hello": ("-- print here\n", 'print("Hello, World!")'),
  "var":   ("local x = 0\nprint(x)\n", 'local x = 42\nprint(x)'),
  "math":  ("-- print product\n", 'print(7 * 6)'),
- "str":   ('-- print joined\n', 'print("Code" .. "Quest")'),
+ "str":   ('-- print joined\n', 'print("Iron" .. "yx")'),
  "cond":  ("local n = 7\n", 'local n = 7\nif n % 2 ~= 0 then print("odd") else print("even") end'),
  "loop":  ("-- loop 1..3\n", 'for i = 1, 3 do print(i) end'),
 }
@@ -206,7 +206,7 @@ S["perl"] = {
  "hello": ("# print here\n", 'print "Hello, World!\\n";'),
  "var":   ("my $x = 0;\nprint \"$x\\n\";\n", 'my $x = 42;\nprint "$x\\n";'),
  "math":  ("# print product\n", 'print 7 * 6, "\\n";'),
- "str":   ('# print joined\n', 'print "Code" . "Quest", "\\n";'),
+ "str":   ('# print joined\n', 'print "Iron" . "yx", "\\n";'),
  "cond":  ("my $n = 7;\n", 'my $n = 7;\nprint(($n % 2 ? "odd" : "even"), "\\n");'),
  "loop":  ("# loop 1..3\n", 'for my $i (1..3) { print "$i\\n"; }'),
 }
@@ -215,7 +215,7 @@ S["dart"] = {
  "hello": (dart("// print here"), dart("print('Hello, World!');")),
  "var":   (dart("var x = 0;\n  print(x);"), dart("var x = 42;\n  print(x);")),
  "math":  (dart("// print product"), dart("print(7 * 6);")),
- "str":   (dart("// print joined"), dart("print('Code' + 'Quest');")),
+ "str":   (dart("// print joined"), dart("print('Iron' + 'yx');")),
  "cond":  (dart("var n = 7;"), dart("var n = 7;\n  print(n % 2 != 0 ? 'odd' : 'even');")),
  "loop":  (dart("// loop 1..3"), dart("for (var i = 1; i <= 3; i++) print(i);")),
 }
@@ -224,7 +224,7 @@ S["scala"] = {
  "hello": (scala("// print here"), scala('println("Hello, World!")')),
  "var":   (scala("val x = 0\n  println(x)"), scala('val x = 42\n  println(x)')),
  "math":  (scala("// print product"), scala('println(7 * 6)')),
- "str":   (scala("// print joined"), scala('println("Code" + "Quest")')),
+ "str":   (scala("// print joined"), scala('println("Iron" + "yx")')),
  "cond":  (scala("val n = 7"), scala('val n = 7\n  println(if (n % 2 != 0) "odd" else "even")')),
  "loop":  (scala("// loop 1..3"), scala('for (i <- 1 to 3) println(i)')),
 }
@@ -232,7 +232,7 @@ S["haskell"] = {
  "hello": ("main :: IO ()\nmain = putStrLn \"\"\n", 'main :: IO ()\nmain = putStrLn "Hello, World!"'),
  "var":   ("main = print (0 :: Int)\n", 'main = print (42 :: Int)'),
  "math":  ("main = print (0 :: Int)\n", 'main = print (7 * 6 :: Int)'),
- "str":   ('main = putStrLn ("" ++ "")\n', 'main = putStrLn ("Code" ++ "Quest")'),
+ "str":   ('main = putStrLn ("" ++ "")\n', 'main = putStrLn ("Iron" ++ "yx")'),
  "cond":  ("main = putStrLn (if odd (7 :: Int) then \"\" else \"\")\n", 'main = putStrLn (if odd (7 :: Int) then "odd" else "even")'),
  "loop":  ("main = mapM_ print []\n", 'main = mapM_ print [1..3]'),
 }
@@ -240,7 +240,7 @@ S["elixir"] = {
  "hello": ("# print here\n", 'IO.puts "Hello, World!"'),
  "var":   ("x = 0\nIO.puts x\n", 'x = 42\nIO.puts x'),
  "math":  ("# print product\n", 'IO.puts 7 * 6'),
- "str":   ('# print joined\n', 'IO.puts "Code" <> "Quest"'),
+ "str":   ('# print joined\n', 'IO.puts "Iron" <> "yx"'),
  "cond":  ("n = 7\n", 'n = 7\nIO.puts(if rem(n, 2) != 0, do: "odd", else: "even")'),
  "loop":  ("# loop 1..3\n", 'for i <- 1..3, do: IO.puts(i)'),
 }
@@ -248,7 +248,7 @@ S["r"] = {
  "hello": ("# print here\n", 'cat("Hello, World!\\n")'),
  "var":   ("x <- 0\ncat(x, \"\\n\", sep=\"\")\n", 'x <- 42\ncat(x, "\\n", sep="")'),
  "math":  ("# print product\n", 'cat(7 * 6, "\\n", sep="")'),
- "str":   ('# print joined\n', 'cat(paste0("Code", "Quest"), "\\n", sep="")'),
+ "str":   ('# print joined\n', 'cat(paste0("Iron", "yx"), "\\n", sep="")'),
  "cond":  ("n <- 7\n", 'n <- 7\ncat(if (n %% 2 != 0) "odd" else "even", "\\n", sep="")'),
  "loop":  ("# loop 1..3\n", 'for (i in 1:3) cat(i, "\\n", sep="")'),
 }
@@ -256,7 +256,7 @@ S["julia"] = {
  "hello": ("# print here\n", 'println("Hello, World!")'),
  "var":   ("x = 0\nprintln(x)\n", 'x = 42\nprintln(x)'),
  "math":  ("# print product\n", 'println(7 * 6)'),
- "str":   ('# print joined\n', 'println("Code" * "Quest")'),
+ "str":   ('# print joined\n', 'println("Iron" * "yx")'),
  "cond":  ("n = 7\n", 'n = 7\nprintln(n % 2 != 0 ? "odd" : "even")'),
  "loop":  ("# loop 1..3\n", 'for i in 1:3\n    println(i)\nend'),
 }
@@ -264,7 +264,7 @@ S["clojure"] = {
  "hello": (";; print here\n", '(println "Hello, World!")'),
  "var":   ("(def x 0)\n(println x)\n", '(def x 42)\n(println x)'),
  "math":  (";; print product\n", '(println (* 7 6))'),
- "str":   (';; print joined\n', '(println (str "Code" "Quest"))'),
+ "str":   (';; print joined\n', '(println (str "Iron" "yx"))'),
  "cond":  ("(def n 7)\n", '(def n 7)\n(println (if (odd? n) "odd" "even"))'),
  "loop":  (";; loop 1..3\n", '(doseq [i (range 1 4)] (println i))'),
 }
@@ -272,7 +272,7 @@ S["sqlite3"] = {
  "hello": ("-- write your query\n", "SELECT 'Hello, World!';"),
  "var":   ("-- select 42\n", "SELECT 42;"),
  "math":  ("-- select the product\n", "SELECT 7 * 6;"),
- "str":   ('-- concatenate with ||\n', "SELECT 'Code' || 'Quest';"),
+ "str":   ('-- concatenate with ||\n', "SELECT 'Iron' || 'yx';"),
  "cond":  ("-- use CASE WHEN\n", "SELECT CASE WHEN 7 % 2 != 0 THEN 'odd' ELSE 'even' END;"),
  "loop":  ("-- UNION ALL three selects\n", "SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3;"),
 }
@@ -544,9 +544,9 @@ import guides
 for tr in tracks:
     tr["guide"] = guides.build_guide(tr)
 
-js = "/* CodeQuest curriculum (auto-generated). Edit generate_curriculum.py and re-run. */\n"
-js += "window.CURRICULUM = " + json.dumps(tracks, ensure_ascii=False, separators=(",", ":")) + ";\n"
-open("/home/user/codequest/public/data/curriculum.js", "w").write(js)
+js = "/* Ironyx curriculum (auto-generated). Edit generate_curriculum.py and re-run. */\n"
+js += "window.CURRICULUM = " + json.dumps(tracks, indent=2, ensure_ascii=False) + ";\n"
+open("/home/user/work/codequest/public/data/curriculum.js", "w").write(js)
 print("languages:", len(tracks))
 print("total lessons:", sum(len(t["lessons"]) for t in tracks))
 for t in tracks:

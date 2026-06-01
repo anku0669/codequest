@@ -208,14 +208,14 @@ EX = {
  "factorial": "**Factorial** `n!` multiplies `1*2*...*n`.\n\nExample: `4! = 24`.",
  "fizzbuzz": "Print `Fizz` for ÷3, `Buzz` for ÷5, `FizzBuzz` for ÷15, else the number. Check `% 15` first.",
 }
-PHRASES = ["Hello, World!", "I love coding", "CodeQuest rocks", "Practice makes perfect", "Keep learning", "Code every day", "Stay curious", "Debugging is fun", "Hello again", "Ship it", "Think in code", "Learn by doing", "Never give up", "One step at a time", "Build cool things", "Quality over speed", "Read the docs", "Test your code", "Small wins count", "You got this"]
+PHRASES = ["Hello, World!", "I love coding", "Ironyx rocks", "Practice makes perfect", "Keep learning", "Code every day", "Stay curious", "Debugging is fun", "Hello again", "Ship it", "Think in code", "Learn by doing", "Never give up", "One step at a time", "Build cool things", "Quality over speed", "Read the docs", "Test your code", "Small wins count", "You got this"]
 VINTS = [42, 7, 100, 256, 1, 99, 2024, 13, 500, 77]
-VSTRS = ["Sam", "coder", "CodeQuest", "Pluto", "banana", "ninja", "sunrise", "rocket", "hello", "Mars"]
+VSTRS = ["Sam", "coder", "Ironyx", "Pluto", "banana", "ninja", "sunrise", "rocket", "hello", "Mars"]
 ARITHS = [(7,'*',6),(13,'+',8),(20,'-',5),(9,'*',9),(100,'-',58),(12,'+',30),(8,'*',7),(15,'+',15),(45,'-',3),(11,'*',11),(6,'+',6),(50,'-',8),(3,'*',14),(40,'+',2),(99,'-',9),(12,'*',12),(25,'+',25),(7,'*',8),(60,'-',18),(21,'+',21)]
 CMPS = [(5,'>',3),(2,'<',9),(7,'>=',7),(4,'<=',3),(10,'==',10),(8,'!=',8),(15,'>',20),(1,'<',1),(6,'>=',2),(9,'<=',9),(3,'==',4),(5,'!=',6),(100,'>',99),(0,'<',5)]
 ODDEVENS = [7, 10, 21, 100, 15, 8]
-CONCATS = [("Code","Quest"),("foo","bar"),("Hello","World"),("data","base"),("up","load"),("note","book"),("key","board"),("sun","flower"),("rain","bow"),("home","work"),("fire","fly"),("water","fall")]
-STRLENS = ["hello", "CodeQuest", "a", "banana", "programming", "sun", "keyboard", "x"]
+CONCATS = [("Iron","yx"),("foo","bar"),("Hello","World"),("data","base"),("up","load"),("note","book"),("key","board"),("sun","flower"),("rain","bow"),("home","work"),("fire","fly"),("water","fall")]
+STRLENS = ["hello", "Ironyx", "a", "banana", "programming", "sun", "keyboard", "x"]
 COUNTS = [3, 4, 5, 6, 7, 8, 9, 10, 2, 12]
 SUMTOS = [5, 10, 3, 7, 100, 4, 6, 8, 9, 50]
 ADDS = [(20,22),(1,1),(50,50),(7,8),(100,23),(3,4),(15,27),(9,9),(40,2),(11,89)]

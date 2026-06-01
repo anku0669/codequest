@@ -1,5 +1,5 @@
 /**
- * Installs the language runtimes CodeQuest needs into a self-hosted Piston instance.
+ * Installs the language runtimes Ironyx Code needs into a self-hosted Piston instance.
  * Runs once on `docker compose up` (the `piston-init` service) and is safe to re-run.
  * Env: PISTON_URL (default http://piston:2000/api/v2)
  */
@@ -49,6 +49,6 @@ async function main() {
   }
   console.log(`\n✅ Installed: ${installed.length}`);
   if (failed.length) console.log(`⚠️  Not installed: ${failed.join(", ")}`);
-  console.log("🎮 CodeQuest runtimes are ready.");
+  console.log("⚡ Ironyx Code runtimes are ready.");
 }
 main().catch((e) => { console.error(e); process.exit(1); });
