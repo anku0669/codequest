@@ -1844,7 +1844,7 @@ window.CURRICULUM = [
         "explanation": "Lists grow. `.append(x)` / `.push(x)` adds to the end. Building lists step by step is how you collect results.",
         "hint": "Python: nums.append(4). JS: nums.push(4).",
         "starter": "const nums = [1, 2, 3];\n// Add 4, then print the list\n",
-        "expectedOutput": "[ 1, 2, 3, 4 ]"
+        "expectedOutput": "1,2,3,4"
       },
       {
         "id": "javascript-c34",
@@ -1868,7 +1868,7 @@ window.CURRICULUM = [
         "explanation": "**Filtering** keeps items that pass a test. Python's list comprehension `[x for x in xs if cond]` and JS's `.filter()` express this cleanly.",
         "hint": "Python: [x for x in nums if x % 2 == 0].",
         "starter": "const nums = [1, 2, 3, 4, 5, 6];\n// Print only the even numbers as an array\n",
-        "expectedOutput": "[ 2, 4, 6 ]"
+        "expectedOutput": "2,4,6"
       },
       {
         "id": "javascript-c36",
@@ -3285,7 +3285,7 @@ window.CURRICULUM = [
         "explanation": "Lists grow. `.append(x)` / `.push(x)` adds to the end. Building lists step by step is how you collect results.",
         "hint": "Python: nums.append(4). JS: nums.push(4).",
         "starter": "const nums: number[] = [1, 2, 3];\n// Add 4, then print the list\n",
-        "expectedOutput": "[ 1, 2, 3, 4 ]"
+        "expectedOutput": "1,2,3,4"
       },
       {
         "id": "typescript-c34",
@@ -3309,7 +3309,7 @@ window.CURRICULUM = [
         "explanation": "**Filtering** keeps items that pass a test. Python's list comprehension `[x for x in xs if cond]` and JS's `.filter()` express this cleanly.",
         "hint": "Python: [x for x in nums if x % 2 == 0].",
         "starter": "const nums: number[] = [1, 2, 3, 4, 5, 6];\n// Print only the even numbers as an array\n",
-        "expectedOutput": "[ 2, 4, 6 ]"
+        "expectedOutput": "2,4,6"
       },
       {
         "id": "typescript-c36",
